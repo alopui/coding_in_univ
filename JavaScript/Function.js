@@ -15,3 +15,16 @@ helloGachon()
 
 var hG = helloGachon();
 hG
+
+function helloTenTimes(helloFunction) {
+    for (var i = 0; i < 10; i++) {
+        helloFunction();
+    }
+}
+
+helloTenTimes(helloGachon);
+
+helloTenTimes(function () {
+        console.log("HiHi")
+    }
+);
