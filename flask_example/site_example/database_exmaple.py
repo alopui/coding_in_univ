@@ -74,6 +74,12 @@ def teardown_request(exception):
     if hasattr(g, 'db'):
         g.db.close()
 
+@app.route('/')
+def index():
+    if not g.user:
+        return redirect(url_for('login'))
+    return redirect(url_for('server_list'))
+
 
 @app.route('/register')
 def register_user():
@@ -90,6 +96,7 @@ def insert_new_user():
         id = request.form['userid']
         email = request.form['useremail']
         password = generate_password_hash(request.form['password'])
+        print(password)
 
         g.db.execute('''insert into user (id, name, email, password) values (%s, %s, %s, %s)''', [id, name, email, password])
         return redirect(url_for('login'))
@@ -115,13 +122,20 @@ def login_check():
 
 @app.route('/serverdata')
 def transferdata():
+    if not g.user:
+        return redirect(url_for('login'))
+    
     json_data = query_db('''select name, servername, serverip, id, email from user''')
     return json.dumps(json_data)
 
 
 @app.route('/serverList')
 def server_list():
-    return  render_template('serverlist.html')
+    if not g.user:
+        return redirect(url_for('login'))
+
+    return render_template('serverlist.html')
+
 
 @app.route('/deleteuser',  methods=["POST"])
 def delete_user_ajax():

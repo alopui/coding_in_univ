@@ -11,8 +11,6 @@ def request_form():
 
 @app.route('/response', methods=["GET"])
 def respons_for_get():
-
-
     if request.method == "GET":
 
         # For Post Method
